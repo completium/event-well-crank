@@ -1,4 +1,4 @@
-archetype eventemitter(well : address)
+archetype eventemitter(shaft : address)
 
 record event {
   ival : nat;
@@ -8,5 +8,5 @@ record event {
 entry emit (i : nat, s : string) {
   var e : event = { i; s };
   var p : bytes = pack(e);
-  transfer 0tz to well call default<bytes>(p)
+  transfer 0tz to shaft call default<bytes>(p)
 }
