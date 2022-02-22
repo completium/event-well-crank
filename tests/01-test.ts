@@ -1,7 +1,6 @@
 import { RpcClient } from '@taquito/rpc';
 import { MyEvent, create_MyEvent } from "./bindings";
-import { processBlock, register, run } from "./indexer";
-import { sleep } from './utils';
+import { processBlock, register, run } from "../src/indexer";
 
 function handle(e : MyEvent) {
   console.log(e.ival);

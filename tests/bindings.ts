@@ -1,6 +1,6 @@
 import { unpackData, MichelsonType, Parser, Prim, IntLiteral, StringLiteral } from '@taquito/michel-codec';
-import { ShaftEventCreator, ShaftEvent } from "./types"
-import { parseHex } from './utils';
+import { ShaftEventCreator, ShaftEvent } from "../src/types"
+import { parseHex } from '../src/utils';
 
 export interface MyEvent extends ShaftEvent {
     ival : number
