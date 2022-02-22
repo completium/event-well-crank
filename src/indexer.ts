@@ -1,6 +1,7 @@
-import { RpcClient, OpKind, OperationContentsAndResultTransaction, InternalOperationResult, MichelsonV1ExpressionBase, BlockResponse } from '@taquito/rpc';
-import { ShaftEvent, ShaftEventCreator, ShaftEventProcessor, ShaftEventDefinition, IndexerOptions } from './types';
-import { sleep, defaultIndexerOptions } from './utils';
+import { BlockResponse, InternalOperationResult, MichelsonV1ExpressionBase, OperationContentsAndResultTransaction, OpKind, RpcClient } from '@taquito/rpc';
+
+import { IndexerOptions, ShaftEvent, ShaftEventCreator, ShaftEventDefinition, ShaftEventProcessor } from './types';
+import { defaultIndexerOptions, sleep } from './utils';
 
 let delay   = defaultIndexerOptions.delay
 let horizon = defaultIndexerOptions.horizon
@@ -43,7 +44,6 @@ function processInternalOp(internalOp : InternalOperationResult) : Array<ApplySh
           const event = eventDef.create(packedEvent);
           if (event !== undefined) {
             apps.push({ process : eventDef.process, event : event })
-            eventDef.process(event)
           }
         }
       }
