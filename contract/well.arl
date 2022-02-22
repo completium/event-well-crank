@@ -1,0 +1,3 @@
+archetype well
+
+entry event(arg : bytes) {}
