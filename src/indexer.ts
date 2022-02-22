@@ -90,7 +90,7 @@ async function crawl(bottom : BlockResponse) : Promise<string> {
   let nextBottom = current.hash
   let nbProcessed = 0
   let apps : Array<ApplyShaftEventProcessor<any>> = []
-  while (bottom.hash !== current.hash || nbProcessed++ < MAX_PROCESSED) {
+  while (bottom.hash !== current.hash && nbProcessed++ < MAX_PROCESSED) {
     console.log("processing block " + current.hash + " ...")
     let blockApps = processBlock(current)
     apps = blockApps.concat(apps)
