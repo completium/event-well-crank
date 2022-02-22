@@ -5,6 +5,7 @@ import { sleep, defaultIndexerOptions } from './utils';
 let delay   = defaultIndexerOptions.delay
 let horizon = defaultIndexerOptions.horizon
 let shaft   = defaultIndexerOptions.shaft
+let bottom  = defaultIndexerOptions.bottom
 let client  = new RpcClient(defaultIndexerOptions.endpoint);
 
 const eventDefinitions : Array<ShaftEventDefinition<any>> = []
@@ -21,13 +22,19 @@ export function register<T extends ShaftEvent>(s : string, c : ShaftEventCreator
   eventDefinitions.push({ source : s, create : c, process : p })
 }
 
+type ApplyShaftEventProcessor<T> = {
+  process : ShaftEventProcessor<T>
+  event   : T
+}
+
 /**
  *
  * @param internalOp block response to process.
  * @description Executes event processors on internal operation
  *
  */
-function processInternalOp(internalOp : InternalOperationResult) {
+function processInternalOp(internalOp : InternalOperationResult) : Array<ApplyShaftEventProcessor<any>> {
+  let apps : Array<ApplyShaftEventProcessor<any>> = []
   eventDefinitions.forEach((eventDef : ShaftEventDefinition<any>) => {
     if (internalOp.source === eventDef.source && internalOp.destination === shaft) {
       if (internalOp.parameters !== undefined) {
@@ -35,12 +42,14 @@ function processInternalOp(internalOp : InternalOperationResult) {
         if (packedEvent !== undefined) {
           const event = eventDef.create(packedEvent);
           if (event !== undefined) {
+            apps.push({ process : eventDef.process, event : event })
             eventDef.process(event)
           }
         }
       }
     }
   })
+  return apps
 }
 
 /**
@@ -49,20 +58,26 @@ function processInternalOp(internalOp : InternalOperationResult) {
  * @description Processes block's internal operations
  *
  */
-export async function processBlock(block : BlockResponse) {
+export function processBlock(block : BlockResponse) : Array<ApplyShaftEventProcessor<any>> {
+  let apps : Array<ApplyShaftEventProcessor<any>> = []
   block.operations.forEach(opentry => {
     opentry.forEach(op => {
       op.contents.forEach(opcontent => {
         if (opcontent.kind === OpKind.TRANSACTION) {
           const internalops = (opcontent as OperationContentsAndResultTransaction).metadata.internal_operation_results
           if (internalops !== undefined) {
-            internalops.forEach(processInternalOp)
+            internalops.forEach(internalop => {
+              apps = apps.concat(processInternalOp(internalop))
+            })
           }
         }
       })
     })
   })
+  return apps
 }
+
+const MAX_PROCESSED = 1000
 
 /**
  *
@@ -70,14 +85,24 @@ export async function processBlock(block : BlockResponse) {
  * @description Crawls down blocks from head to bottom (bottom is NOT crawled)
  *
  */
-async function crawl(bottom : BlockResponse) {
-  let current : BlockResponse = await client.getBlock({ block: `"head~${horizon}` })
-  while (bottom.hash !== current.hash) {
-    await processBlock(current)
+async function crawl(bottom : BlockResponse) : Promise<string> {
+  let current : BlockResponse = await client.getBlock({ block: `head~${horizon}` })
+  let nextBottom = current.hash
+  let nbProcessed = 0
+  let apps : Array<ApplyShaftEventProcessor<any>> = []
+  while (bottom.hash !== current.hash || nbProcessed++ < MAX_PROCESSED) {
+    console.log("processing block " + current.hash + " ...")
+    let blockApps = processBlock(current)
+    apps = blockApps.concat(apps)
     current = await client.getBlock({ block : current.header.predecessor })
-    await sleep(delay)
   }
+  apps.forEach(app => {
+    app.process(app.event)
+  })
+  return nextBottom
 }
+
+let _stop = false
 
 /**
  *
@@ -86,4 +111,23 @@ async function crawl(bottom : BlockResponse) {
  *
  */
 export async function run(options ?: IndexerOptions) {
+  if (options !== undefined) {
+    delay   = options.delay   ?? delay
+    horizon = options.horizon ?? horizon
+    shaft   = options.shaft   ?? shaft
+    bottom  = options.bottom  ?? bottom
+    if (options.endpoint !== undefined) {
+      client = new RpcClient(options.endpoint)
+    }
+  }
+  let bottomBlock : BlockResponse = await client.getBlock({ block: bottom })
+  do {
+    let newBottom = await crawl(bottomBlock)
+    await sleep(delay)
+    bottomBlock = await client.getBlock({ block: newBottom })
+  } while (!_stop)
+}
+
+export function stop() {
+  _stop = true
 }

@@ -18,4 +18,5 @@ export type IndexerOptions = {
   horizon  ?: number
   endpoint ?: string
   shaft    ?: string
+  bottom   ?: string
 }

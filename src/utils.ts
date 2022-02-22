@@ -4,7 +4,8 @@ export const defaultIndexerOptions : Required<IndexerOptions> = {
     delay    : 2000,
     horizon  : 3,
     endpoint : 'https://hangzhounet.smartpy.io',
-    shaft    : 'KT1UsVVireDXZE5R1waCeyKnYD178g2cVDji'
+    shaft    : 'KT1UsVVireDXZE5R1waCeyKnYD178g2cVDji',
+    bottom   : "head~4"
 }
 
 export function sleep(ms: number) {

@@ -1,8 +1,9 @@
 import { RpcClient } from '@taquito/rpc';
 import { MyEvent, create_MyEvent } from "./bindings";
 import { processBlock, register, run } from "./indexer";
+import { sleep } from './utils';
 
-function handle(e : MyEvent) : void {
+function handle(e : MyEvent) {
   console.log(e.ival);
   console.log(e.sval);
 }
@@ -18,4 +19,8 @@ async function testProcessBlock () {
   await processBlock(block)
 }
 
-let _ = testProcessBlock()
+async function testRun () {
+  await run()
+}
+
+let _ = testRun()
