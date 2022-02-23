@@ -19,11 +19,12 @@ const eventDefinitions : Array<ShaftEventDefinition<any>> = []
  * @description Registers an event definition in indexer
  *
  */
-export function register<T extends ShaftEvent>(s : string, c : ShaftEventCreator<T>, p : ShaftEventProcessor<T>) : void {
+export function registerEvent<T extends ShaftEvent>(
+{ s, c, p }: { s: string; c: ShaftEventCreator<T>; p: ShaftEventProcessor<T>; }) : void {
   eventDefinitions.push({ source : s, create : c, process : p })
 }
 
-type ApplyShaftEventProcessor<T> = {
+type ApplyShaftEventProcessor<T extends ShaftEvent> = {
   process : ShaftEventProcessor<T>
   event   : T
 }

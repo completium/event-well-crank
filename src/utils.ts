@@ -24,3 +24,8 @@ export function parseHex(s: string): number[] {
   }
   return res;
 }
+
+export function timestamp_to_date(t : string) : Date {
+  const timestamp = parseInt(t, 10)
+  return new Date(timestamp * 1000)
+}
