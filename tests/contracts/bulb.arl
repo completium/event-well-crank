@@ -4,39 +4,26 @@ states =
 | On
 | Off initial
 
-record event {
-  kind : string;
-  %from : address;
-  time : date
-}
-
-/*
 event SwitchOn {
-  from_ : address,
-  time : date
+  from_ : address;
+  time : date;
 }
 
 event SwitchOff {
-  from_ : address,
-  time : date
+  from_ : address;
+  time : date;
 }
-
-*/
 
 transition switchOn() {
   from Off to On
   with effect {
-    //emit<SwitchOn>({ caller; now });
-    var e : event = { "SwitchOn"; caller; now };
-    transfer 0tz to shaft call default<bytes>(pack(e))
+    emit<SwitchOn>({ caller; now })
   }
 }
 
 transition switchOff() {
   from On to Off
   with effect {
-    //emit<SwitchOff>({ caller; now });
-    var e : event = { "SwitchOff"; caller; now };
-    transfer 0tz to shaft call default<bytes>(pack(e))
+    emit<SwitchOff>({ caller; now })
   }
 }

@@ -1,12 +1,12 @@
 archetype eventemitter(shaft : address)
 
-record event {
+record %event {
   ival : nat;
   sval : string;
 }
 
-entry emit (i : nat, s : string) {
-  var e : event = { i; s };
+entry %emit (i : nat, s : string) {
+  var e : %event = { i; s };
   var p : bytes = pack(e);
   transfer 0tz to shaft call default<bytes>(p)
 }
