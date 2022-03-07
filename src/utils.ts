@@ -1,14 +1,14 @@
 import { MichelsonData, MichelsonType } from "@taquito/michel-codec";
-import { IndexerOptions } from "./types"
+import { CrankOptions } from "./types"
 import { Parser } from "@taquito/michel-codec";
 import { unpackData } from "@taquito/michel-codec";
 import { Schema } from "@taquito/michelson-encoder";
 
-export const defaultIndexerOptions : Required<IndexerOptions> = {
+export const defaultIndexerOptions : Required<CrankOptions> = {
     delay    : 2000,
     horizon  : 3,
     endpoint : 'https://hangzhounet.smartpy.io',
-    shaft    : 'KT1UsVVireDXZE5R1waCeyKnYD178g2cVDji',
+    well    : 'KT1UsVVireDXZE5R1waCeyKnYD178g2cVDji',
     bottom   : "head~4"
 }
 

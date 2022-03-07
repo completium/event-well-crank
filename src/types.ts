@@ -1,27 +1,27 @@
 
-export interface ShaftEvent {}
+export interface WellEvent {}
 
-export type ShaftEventCreator<T extends ShaftEvent> = (b : string) => T | undefined
+export type WellEventCreator<T extends WellEvent> = (b : string) => T | undefined
 
-export type ShaftEventProcessor<T extends ShaftEvent> = (t : T, d ?: EventData) => void
+export type WellEventProcessor<T extends WellEvent> = (t : T, d ?: WellEventData) => void
 
-export interface ShaftEventDefinition<T extends ShaftEvent> {
+export interface WellEventDefinition<T extends WellEvent> {
   source  : string
-  create  : ShaftEventCreator<T>
-  process : ShaftEventProcessor<T>
+  create  : WellEventCreator<T>
+  process : WellEventProcessor<T>
 }
 /**
  * @description indexer options to pass to the 'run' function
  */
-export type IndexerOptions = {
+export type CrankOptions = {
   delay    ?: number
   horizon  ?: number
   endpoint ?: string
-  shaft    ?: string
+  well     ?: string
   bottom   ?: string
 }
 
-export type EventData = {
+export type WellEventData = {
   block  : string
   op     : string
   time   : string

@@ -8,12 +8,13 @@
   },
   "devDependencies": {
     "@completium/completium-cli": "^0.3.25",
+    "bignumber.js": "^9.0.2",
     "mocha": "^9.2.1"
   },
   "scripts": {
     "build": "npx tsc --outDir build",
     "test": "node ./build/tests/01-test.js",
-    "bind": "archetype --target bindings-ts ./tests/contracts/bulb.arl > ./tests/bulb_bindings_gen.ts",
+    "bind": "archetype --target bindings-ts ./tests/contracts/testevent.arl > ./tests/test_bindings_gen.ts",
     "deploy": "mocha --timeout 0 --slow 99999999999999999999 ./tests/deploy.js"
   }
 }

@@ -1,14 +1,14 @@
 import { unpackData, MichelsonType, Parser, Prim, IntLiteral, StringLiteral } from '@taquito/michel-codec';
-import { registerEvent } from '../src/indexer';
-import { ShaftEvent, ShaftEventProcessor } from "../src/types"
+import { registerEvent } from '../src/crank';
+import { WellEvent, WellEventProcessor } from "../src/types"
 import { parseHex } from '../src/utils';
 
-export interface MyEvent extends ShaftEvent {
+export interface MyEvent extends WellEvent {
   ival : number
   sval : string
 }
 
-export function registerMyEvent(source : string, handler : ShaftEventProcessor<MyEvent>) {
+export function registerMyEvent(source : string, handler : WellEventProcessor<MyEvent>) {
   registerEvent({ s: source, c: (s : string) => {
     const t : MichelsonType = {
       "prim": "pair",

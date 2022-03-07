@@ -1,0 +1,10 @@
+archetype testevent(shaft : address)
+
+event TestEvent {
+  ival : nat;
+  sval : string;
+}
+
+entry %emit (i : nat, s : string) {
+  emit<TestEvent>({ i; s })
+}

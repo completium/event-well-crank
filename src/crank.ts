@@ -1,27 +1,27 @@
 import { BlockResponse, InternalOperationResult, MichelsonV1ExpressionBase, OperationContentsAndResultTransaction, OpKind, RpcClient } from '@taquito/rpc';
 
-import { EventData, IndexerOptions, ShaftEvent, ShaftEventCreator, ShaftEventDefinition, ShaftEventProcessor } from './types';
+import { WellEventData, CrankOptions, WellEvent, WellEventCreator, WellEventDefinition, WellEventProcessor } from './types';
 import { defaultIndexerOptions, sleep } from './utils';
 
 let delay   = defaultIndexerOptions.delay
 let horizon = defaultIndexerOptions.horizon
-let shaft   = defaultIndexerOptions.shaft
+let well    = defaultIndexerOptions.well
 let bottom  = defaultIndexerOptions.bottom
 let client  = new RpcClient(defaultIndexerOptions.endpoint);
 
-const eventDefinitions : Array<ShaftEventDefinition<any>> = []
+const eventDefinitions : Array<WellEventDefinition<any>> = []
 const eventDefinitionSet : Set<string> = new Set()
 
 /**
  *
  * @param s source, address of the event emitter contract
- * @param c creator, shaft event creator function (provided by binding generator)
- * @param p processor, your shaft event processor
+ * @param c creator, well event creator function (provided by binding generator)
+ * @param p processor, your well event processor
  * @description Registers an event definition in indexer
  *
  */
-export function registerEvent<T extends ShaftEvent>(
-{ s, c, p }: { s: string; c: ShaftEventCreator<T>; p: ShaftEventProcessor<T>; }) : void {
+export function registerEvent<T extends WellEvent>(
+{ s, c, p }: { s: string; c: WellEventCreator<T>; p: WellEventProcessor<T>; }) : void {
   const key = s + c.toString() + p.toString()
   if (eventDefinitionSet.has(key)) {
     return
@@ -30,10 +30,10 @@ export function registerEvent<T extends ShaftEvent>(
   eventDefinitionSet.add(key)
 }
 
-type ApplyProcessor<T extends ShaftEvent> = {
-  process : ShaftEventProcessor<T>
+type ApplyProcessor<T extends WellEvent> = {
+  process : WellEventProcessor<T>
   event   : T
-  data    : EventData
+  data    : WellEventData
 }
 
 /**
@@ -42,10 +42,10 @@ type ApplyProcessor<T extends ShaftEvent> = {
  * @description Executes event processors on internal operation
  *
  */
-function processInternalOp(internalOp : InternalOperationResult, data : Omit<EventData, 'source'>) : Array<ApplyProcessor<any>> {
+function processInternalOp(internalOp : InternalOperationResult, data : Omit<WellEventData, 'source'>) : Array<ApplyProcessor<any>> {
   let apps : Array<ApplyProcessor<any>> = []
-  eventDefinitions.forEach((eventDef : ShaftEventDefinition<any>) => {
-    if (internalOp.source === eventDef.source && internalOp.destination === shaft) {
+  eventDefinitions.forEach((eventDef : WellEventDefinition<any>) => {
+    if (internalOp.source === eventDef.source && internalOp.destination === well) {
       if (internalOp.parameters !== undefined) {
         const packedEvent = (internalOp.parameters.value as MichelsonV1ExpressionBase).bytes
         if (packedEvent !== undefined) {
@@ -70,7 +70,7 @@ export function processBlock(block : BlockResponse) : Array<ApplyProcessor<any>>
   let apps : Array<ApplyProcessor<any>> = []
   block.operations.forEach(opentry => {
     opentry.forEach(op => {
-      let data : Omit<EventData, 'source'> = { block : block.hash, op : op.hash, time : block.header.timestamp.toString() }
+      let data : Omit<WellEventData, 'source'> = { block : block.hash, op : op.hash, time : block.header.timestamp.toString() }
       op.contents.forEach(opcontent => {
         if (opcontent.kind === OpKind.TRANSACTION) {
           const internalops = (opcontent as OperationContentsAndResultTransaction).metadata.internal_operation_results
@@ -122,7 +122,7 @@ let running_bottom : string | undefined = undefined
  * @description Starts the event indexer
  *
  */
-export async function run(options ?: IndexerOptions) {
+export async function runCrank(options ?: CrankOptions) {
   if (_running) {
     return
   }
@@ -133,7 +133,7 @@ export async function run(options ?: IndexerOptions) {
   if (options !== undefined) {
     delay   = options.delay   ?? delay
     horizon = options.horizon ?? horizon
-    shaft   = options.shaft   ?? shaft
+    well   = options.well   ?? well
     bottom  = options.bottom  ?? bottom
     if (options.endpoint !== undefined) {
       client = new RpcClient(options.endpoint)

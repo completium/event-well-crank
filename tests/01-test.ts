@@ -1,23 +1,26 @@
-import { run } from "../src/indexer";
-import { register_SwitchOff, register_SwitchOn, SwitchOff, SwitchOn } from './bulb_bindings_gen';
+import { runCrank } from '../src';
+import { register_TestEvent, TestEvent } from './test_bindings_gen';
+
+import { importKey } from '@taquito/signer';
+import { TezosToolkit } from '@taquito/taquito';
+
+const Tezos = new TezosToolkit('https://hangzhounet.api.tez.ie');
+importKey(Tezos, "p2sk2obfVMEuPUnadAConLWk7Tf4Dt3n4svSgJwrgpamRqJXvaYcg1")
 
 const bulb = "KT19EAMugKU416cbA9jL1XcukWArfpv4dLYu"
 
-function handleSwitchOn(e : SwitchOn) {
-  console.log("Bulb switched ON by " + e.from + " on " + e.time);
-}
-
-function handleSwitchOff(e : SwitchOff) {
-  console.log("Bulb switched OFF by " + e.from + " on " + e.time);
+function handleTestEvent(e : TestEvent) {
+  console.log("Test Event detected: " + e.ival + " on " + e.sval);
 }
 
 //registerMyEvent("KT1PPV3GpPU4ofRkSnzC7tzazCvjy3NhigA7",  handle)
-register_SwitchOn(bulb, handleSwitchOn)
-register_SwitchOff(bulb, handleSwitchOff)
+register_TestEvent(bulb, handleTestEvent)
 
 async function testRun () {
-  await run();
+  await runCrank();
 }
+
+
 
 testRun();
 
