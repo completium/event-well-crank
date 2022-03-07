@@ -1,0 +1,32 @@
+# Unit
+{
+  storage unit;
+  parameter (pair %emit (nat %i) (string %s));
+  code { NIL operation;
+         DIG 1;
+         UNPAIR;
+         UNPAIR;
+         SWAP;
+         DUP 4;
+         PUSH address "KT1UsVVireDXZE5R1waCeyKnYD178g2cVDji";
+         CONTRACT %event bytes;
+         IF_NONE
+           { PUSH string "BAD_EVENT_CONTRACT";
+             FAILWITH }
+           {  };
+         PUSH mutez 0;
+         DUP 4;
+         DUP 6;
+         PAIR;
+         PUSH string "TestEvent";
+         PAIR;
+         PACK;
+         TRANSFER_TOKENS;
+         CONS;
+         DIP { DIG 3; DROP };
+         DUG 3;
+         DROP 2;
+         DIG 1;
+         PAIR };
+}
+
