@@ -1,4 +1,38 @@
 {
+  "name": "@completium/well-event-crank",
+  "version": "0.0.1",
+  "description": "TODO",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "files": [
+    "/build"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "TODO"
+  },
+  "keywords": [
+    "archetype",
+    "tezos",
+    "smart-contract",
+    "completium",
+    "event",
+    "blockchain"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/completium/well-event-crank/issues"
+  },
+  "homepage": "https://github.com/completium/well-event-crank/#readme",
+    "scripts": {
+    "build": "npx tsc --outDir build",
+    "test": "node ./build/tests/01-test.js",
+    "bind": "archetype --target bindings-ts ./tests/contracts/testevent.arl > ./tests/test_bindings_gen.ts",
+    "deploy": "mocha --timeout 0 --slow 99999999999999999999 ./tests/deploy.js"
+  },
   "dependencies": {
     "@taquito/michel-codec": "^11.2.0",
     "@taquito/rpc": "^11.2.0",
@@ -10,11 +44,5 @@
     "@completium/completium-cli": "^0.3.25",
     "bignumber.js": "^9.0.2",
     "mocha": "^9.2.1"
-  },
-  "scripts": {
-    "build": "npx tsc --outDir build",
-    "test": "node ./build/tests/01-test.js",
-    "bind": "archetype --target bindings-ts ./tests/contracts/testevent.arl > ./tests/test_bindings_gen.ts",
-    "deploy": "mocha --timeout 0 --slow 99999999999999999999 ./tests/deploy.js"
   }
 }
