@@ -1,6 +1,6 @@
 import { runCrank } from '../src';
 import { register_TestEvent, TestEvent } from './test_bindings_gen';
-import { InMemorySigner, importKey } from '@taquito/signer';
+import { InMemorySigner } from '@taquito/signer';
 import { TezosToolkit } from '@taquito/taquito';
 import { BlockResponse, RpcClient } from '@taquito/rpc';
 import fs from 'fs';
@@ -13,7 +13,7 @@ Tezos.setProvider({
 
 let client  = new RpcClient('https://hangzhounet.api.tez.ie');
 
-const event_test_michelson = fs.readFileSync('./contracts/testevent.tz').toString();
+const event_test_michelson = fs.readFileSync('./tests/contracts/testevent.tz').toString();
 
 const anint = 12345
 const astring = 'This is a string test'
@@ -21,8 +21,10 @@ const astring = 'This is a string test'
 function handleTestEvent(e : TestEvent) {
   console.log(`Test Event detected with values ${e.ival} and ${e.sval}!`);
   if (e.ival.toNumber() !== anint || e.sval !== astring) {
+    console.log('Failure')
     process.exit(-1)
   }
+  console.log('Success')
   process.exit()
 }
 
@@ -36,14 +38,17 @@ const runTest = async () => {
   console.log(`Origination completed.`);
   console.log(`Contract originated at ${contract.address}.`);
   register_TestEvent(contract.address, handleTestEvent);
-  let bottomBlock : BlockResponse = await client.getBlock({ block: "head" });
+  let bottomBlock : BlockResponse = await client.getBlock({ block: "head~4" });
   let bottom = bottomBlock.hash;
   console.log(`Bottom block hash is ${bottom}`);
   const op = await contract.methods.default(anint, astring).send();
   console.log("Calling contract ...");
   await op.confirmation();
-  console.log("Running Crank ...");
-  runCrank({ bottom : bottom });
+  runCrank({
+    bottom : bottom,
+    endpoint : 'https://hangzhounet.smartpy.io',
+    well    : 'KT1UsVVireDXZE5R1waCeyKnYD178g2cVDji'
+  });
 }
 
 runTest()
