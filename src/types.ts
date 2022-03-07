@@ -3,7 +3,7 @@ export interface ShaftEvent {}
 
 export type ShaftEventCreator<T extends ShaftEvent> = (b : string) => T | undefined
 
-export type ShaftEventProcessor<T extends ShaftEvent> = (t : T) => void
+export type ShaftEventProcessor<T extends ShaftEvent> = (t : T, d ?: EventData) => void
 
 export interface ShaftEventDefinition<T extends ShaftEvent> {
   source  : string
@@ -19,4 +19,11 @@ export type IndexerOptions = {
   endpoint ?: string
   shaft    ?: string
   bottom   ?: string
+}
+
+export type EventData = {
+  block  : string
+  op     : string
+  time   : string
+  source : string
 }

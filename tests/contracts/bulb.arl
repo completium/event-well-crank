@@ -5,12 +5,12 @@ states =
 | Off initial
 
 event SwitchOn {
-  from_ : address;
+  %from : address;
   time : date;
 }
 
 event SwitchOff {
-  from_ : address;
+  %from : address;
   time : date;
 }
 

@@ -1,4 +1,8 @@
+import { MichelsonData, MichelsonType } from "@taquito/michel-codec";
 import { IndexerOptions } from "./types"
+import { Parser } from "@taquito/michel-codec";
+import { unpackData } from "@taquito/michel-codec";
+import { Schema } from "@taquito/michelson-encoder";
 
 export const defaultIndexerOptions : Required<IndexerOptions> = {
     delay    : 2000,
@@ -23,6 +27,12 @@ export function parseHex(s: string): number[] {
     res.push(x);
   }
   return res;
+}
+
+export function hex_to_data(ty : MichelsonType, s : string) : any {
+  const expr : MichelsonData = unpackData(parseHex(s), ty);
+  const schema = new Schema(ty);
+  return schema.Execute(expr);
 }
 
 export function timestamp_to_date(t : string) : Date {
