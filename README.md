@@ -131,7 +131,7 @@ Test Event received with value "This is a long enough string."!
 
 ## Run `test.ts`
 
-Edit [test.ts] and replace the `'YOUR_PRIVATE_KEY'` by your private key. The following command displays the private key of your current account:
+Edit [`test.ts`](./tests/test.ts) and replace the `'YOUR_PRIVATE_KEY'` by your private key. The following command displays the private key of your current account:
 ```bash
 $ completium-cli show account --with-private-key
 ```
