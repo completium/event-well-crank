@@ -1,4 +1,4 @@
-# Event well Crank
+# Event Well Crank
 
 `@completium/event-well-crank` detects events emitted by smart contracts on the [Tezos](https://tezos.com/) blockchain, and executes registered event handler functions.
 
