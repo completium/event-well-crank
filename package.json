@@ -24,9 +24,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/completium/well-event-crank/issues"
+    "url": "https://github.com/completium/event-well-crank/issues"
   },
-  "homepage": "https://github.com/completium/well-event-crank/#readme",
+  "homepage": "https://github.com/completium/event-well-crank",
   "scripts": {
     "build": "npx tsc --outDir build",
     "test": "node ./build/tests/test.js",
