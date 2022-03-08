@@ -8,9 +8,16 @@ let horizon = defaultIndexerOptions.horizon
 let well    = defaultIndexerOptions.well
 let bottom  = defaultIndexerOptions.bottom
 let client  = new RpcClient(defaultIndexerOptions.endpoint);
+let verbose = defaultIndexerOptions.verbose
 
 const eventDefinitions : Array<WellEventDefinition<any>> = []
 const eventDefinitionSet : Set<string> = new Set()
+
+const dump = (s : string) => {
+  if (verbose) {
+    console.log(s)
+  }
+}
 
 /**
  *
@@ -100,7 +107,7 @@ async function crawl(bottom : BlockResponse) : Promise<string> {
   let nbProcessed = 0
   let apps : Array<ApplyProcessor<any>> = []
   while (bottom.hash !== current.hash && nbProcessed++ < MAX_PROCESSED) {
-    console.log("processing block " + current.hash + " ...")
+    dump("processing block " + current.hash + " ...")
     let blockApps = processBlock(current)
     apps = blockApps.concat(apps)
     current = await client.getBlock({ block : current.header.predecessor })
@@ -126,7 +133,7 @@ export async function runCrank(options ?: CrankOptions) {
   if (_running) {
     return
   }
-  console.log("Starting tezos event listener ...")
+  dump("Starting tezos event listener ...")
   _running = true
   _stop = false
   bottom = running_bottom ?? bottom
@@ -135,6 +142,7 @@ export async function runCrank(options ?: CrankOptions) {
     horizon = options.horizon ?? horizon
     well   = options.well   ?? well
     bottom  = options.bottom  ?? bottom
+    verbose = options.verbose ?? verbose
     if (options.endpoint !== undefined) {
       client = new RpcClient(options.endpoint)
     }
@@ -147,7 +155,7 @@ export async function runCrank(options ?: CrankOptions) {
     bottomBlock = await client.getBlock({ block: newBottom })
   } while (!_stop)
   _running = false
-  console.log("Tezos event listener stopped.")
+  dump("Tezos event listener stopped.")
 }
 
 export function stopCrank() {

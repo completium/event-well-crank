@@ -1,3 +1,3 @@
 export * from "./types";
-export { hex_to_data, timestamp_to_date } from './utils';
+export { hex_to_data } from './utils';
 export * from "./crank";

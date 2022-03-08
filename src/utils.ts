@@ -9,14 +9,15 @@ export const defaultIndexerOptions : Required<CrankOptions> = {
     horizon  : 3,
     endpoint : 'https://hangzhounet.smartpy.io',
     well     : 'KT1UsVVireDXZE5R1waCeyKnYD178g2cVDji',
-    bottom   : "head~4"
+    bottom   : "head~4",
+    verbose  : false
 }
 
 export function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export function parseHex(s: string): number[] {
+function parseHex(s: string): number[] {
   const res: number[] = [];
   for (let i = 0; i < s.length; i += 2) {
     const ss = s.slice(i, i + 2);
@@ -33,9 +34,4 @@ export function hex_to_data(ty : MichelsonType, s : string) : any {
   const expr : MichelsonData = unpackData(parseHex(s), ty);
   const schema = new Schema(ty);
   return schema.Execute(expr);
-}
-
-export function timestamp_to_date(t : string) : Date {
-  const timestamp = parseInt(t, 10)
-  return new Date(timestamp * 1000)
 }

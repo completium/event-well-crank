@@ -19,6 +19,7 @@ export type CrankOptions = {
   endpoint ?: string
   well     ?: string
   bottom   ?: string
+  verbose  ?: boolean
 }
 
 export type WellEventData = {
