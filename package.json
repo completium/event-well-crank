@@ -1,5 +1,5 @@
 {
-  "name": "@completium/well-event-crank",
+  "name": "@completium/event-well-crank",
   "version": "0.0.1",
   "description": "TODO",
   "main": "build/index.js",
