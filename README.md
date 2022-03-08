@@ -104,13 +104,11 @@ const handleTestEvent = (e : TestEvent) => {
 
 const run = async () => {
   register_TestEvent('KT19EAMugKU416cbA9jL1XcukWArfpv4dLYA', handleTestEvent);
-  runCrank()
+  runCrank({ endpoint: 'https://hangzhounet.api.tez.ie' })
 }
 
 await run()
 ```
-
-> use
 
 ### Execute
 
@@ -120,7 +118,7 @@ Compile and run the application above. Then call the contract with the following
 $ completium-cli call event_demo --arg `{ "v" : "This is a long enough string." }`
 ```
 
-After a few blocks generation, the application prints the follwing message:
+After a few blocks generation, the application prints the following message:
 
 ```
 Test Event received with value "This is a long enough string."!
