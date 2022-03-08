@@ -8,7 +8,7 @@ import fs from 'fs';
 const Tezos = new TezosToolkit('https://hangzhounet.api.tez.ie');
 
 Tezos.setProvider({
-  signer: new InMemorySigner('edskS2v9ADu7fomdqaHTJoSPHHPTh5Dpjcq8UapLVsPW3nq4ERewQcV4gPN4yTvo2RqhjfDoY2XjHZeerQ1QNyixLR5h1ygUUt'),
+  signer: new InMemorySigner('YOUR_PRIVATE_KEY'),
 });
 
 let client  = new RpcClient('https://hangzhounet.api.tez.ie');
