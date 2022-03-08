@@ -150,6 +150,6 @@ export async function runCrank(options ?: CrankOptions) {
   console.log("Tezos event listener stopped.")
 }
 
-export function stop() {
+export function stopCrank() {
   _stop = true
 }

@@ -8,7 +8,7 @@ export const defaultIndexerOptions : Required<CrankOptions> = {
     delay    : 2000,
     horizon  : 3,
     endpoint : 'https://hangzhounet.smartpy.io',
-    well    : 'KT1UsVVireDXZE5R1waCeyKnYD178g2cVDji',
+    well     : 'KT1UsVVireDXZE5R1waCeyKnYD178g2cVDji',
     bottom   : "head~4"
 }
 

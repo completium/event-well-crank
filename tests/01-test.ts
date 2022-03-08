@@ -35,19 +35,18 @@ const runTest = async () => {
   });
   console.log(`Waiting for confirmation of origination for ${originationOp.contractAddress}...`);
   const contract = await originationOp.contract();
-  console.log(`Origination completed.`);
   console.log(`Contract originated at ${contract.address}.`);
   register_TestEvent(contract.address, handleTestEvent);
   let bottomBlock : BlockResponse = await client.getBlock({ block: "head~4" });
   let bottom = bottomBlock.hash;
   console.log(`Bottom block hash is ${bottom}`);
   const op = await contract.methods.default(anint, astring).send();
-  console.log("Calling contract ...");
+  console.log("Calling contract...");
   await op.confirmation();
   runCrank({
-    bottom : bottom,
+    bottom   : bottom,
     endpoint : 'https://hangzhounet.smartpy.io',
-    well    : 'KT1UsVVireDXZE5R1waCeyKnYD178g2cVDji'
+    well     : 'KT1UsVVireDXZE5R1waCeyKnYD178g2cVDji'
   });
 }
 
