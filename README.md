@@ -1,6 +1,6 @@
 # Event well Crank
 
-`@completium/event-well-crank` receives events from smart contracts on the [Tezos](https://tezos.com/) blockchain. It executes registered event handler functions when receiving the event.
+`@completium/event-well-crank` detects events emitted by smart contracts on the [Tezos](https://tezos.com/) blockchain, and executes registered event handler functions.
 
 ## API
 
@@ -29,12 +29,12 @@ Starts the crank process. It takes an optional `CrankOptions` object with option
 
 | Field | Type | Default | Desc |
 | -- | -- | -- | -- |
+| `bottom` | `string` | `head~4` | block hash to start crawling from |
 | `delay` | `number` | `2000` | number of milliseconds between two lookups of the event well contract |
 | `horizon` | `number` | `3` | number of blocks to look back (the higher, the higher the probability to read the main branch) |
 | `endpoint` | `string` | `https://mainnet.api.tez.ie` | endpoint used by the event crank |
 | `well` | `string` | `KT1...` | address of the event well contract |
-| `bottom` | `string` | `head~4` | block hash to start crawling from |
-
+| `verbose` | `boolean` | `false` | flag to turn crank's verbose mode on/off |
 
 ### `stopCrank`
 
@@ -104,7 +104,7 @@ const handleTestEvent = (e : TestEvent) => {
 
 const run = async () => {
   register_TestEvent('KT19EAMugKU416cbA9jL1XcukWArfpv4dLYA', handleTestEvent);
-  runCrank({ endpoint: 'https://hangzhounet.api.tez.ie' })
+  runCrank({ endpoint: 'https://hangzhounet.api.tez.ie', well: 'KT1UsVVireDXZE5R1waCeyKnYD178g2cVDji' })
 }
 
 await run()
