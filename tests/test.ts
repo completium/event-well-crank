@@ -8,7 +8,7 @@ import fs from 'fs';
 const Tezos = new TezosToolkit('https://hangzhounet.api.tez.ie');
 
 Tezos.setProvider({
-  signer: new InMemorySigner('YOUR_PRIVATE_KEY'),
+  signer: new InMemorySigner('edskS2v9ADu7fomdqaHTJoSPHHPTh5Dpjcq8UapLVsPW3nq4ERewQcV4gPN4yTvo2RqhjfDoY2XjHZeerQ1QNyixLR5h1ygUUt'),
 });
 
 let client  = new RpcClient('https://hangzhounet.api.tez.ie');
@@ -16,10 +16,10 @@ let client  = new RpcClient('https://hangzhounet.api.tez.ie');
 const event_test_michelson = fs.readFileSync('./tests/contracts/testevent.tz').toString();
 
 const anint = 12345
-const astring = 'This is a string test'
+const astring = 'This is a string'
 
 function handleTestEvent(e : TestEvent) {
-  console.log(`Test Event detected with values ${e.ival} and ${e.sval}!`);
+  console.log(`Test Event detected with values '${e.ival}' and '${e.sval}'!`);
   if (e.ival.toNumber() !== anint || e.sval !== astring) {
     console.log('Failure')
     process.exit(-1)
@@ -46,7 +46,8 @@ const runTest = async () => {
   runCrank({
     bottom   : bottom,
     endpoint : 'https://hangzhounet.smartpy.io',
-    well     : 'KT1UsVVireDXZE5R1waCeyKnYD178g2cVDji'
+    well     : 'KT1UsVVireDXZE5R1waCeyKnYD178g2cVDji',
+    verbose  : true
   });
 }
 
