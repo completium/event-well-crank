@@ -71,7 +71,7 @@ event TestEvent {
 }
 
 entry emit_event(v : string) {
-  if length(v) > 4 then
+  if length(v) > 20 then
     emit<TestEvent>({ val })
 }
 ```
@@ -96,7 +96,7 @@ It generates the following two elements:
 These elements may be used to implement the event receiver application which registers an event handler and starts the cranks. Say the event demo contract deployed above is at address `KT19EAMugKU416cbA9jL1XcukWArfpv4dLYA`
 ```typescript
 import { runCrank } from '@completium/event-well-crank';
-import { register_TestEvent, TestEvent } from './test_bindings_gen';
+import { register_TestEvent, TestEvent } from './bindings-event_demo';
 
 const handleTestEvent = (e : TestEvent) => {
   console.log(`Test Event received with value "${e.val}"!`);
