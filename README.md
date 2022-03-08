@@ -9,13 +9,11 @@
 Registers an event handler for a specific contract. It takes 3 arguments:
 * the address of the emitter contract
 * the function to create an event from its packed version
-* the event handler function
+* the *event handler* function that takes 2 arguments:
+  * the emitted event
+  * the event data (optional)
 
 The function to create the event may be automatically generated (see [Bindings](#bindings) below).
-
-The handler function takes 2 arguments:
-* the emitted event
-* the event data (optional)
 
 The event data provides information about the emitted event:
 * date
@@ -37,7 +35,7 @@ Starts the crank process. It takes an optional `CrankOptions` object with option
 | `verbose` | `boolean` | `false` | flag to turn crank's verbose mode on/off |
 
 The well contract is deployed on mainnet and hangzhounet:
-* mainnet (default) : `KT1...`.
+* mainnet (default): `KT1...`.
 * hangzhounet (test): `KT1UsVVireDXZE5R1waCeyKnYD178g2cVDji`
 
 ### `stopCrank`
@@ -95,7 +93,7 @@ $ completium-cli generate bindings-ts event_demo > bindings-event_demo.ts
 
 It generates the following two elements:
 * `EventDemo`
-* `register_EventDemo`
+* `register_TestEvent`
 
 These elements may be used to implement the event receiver application which registers an event handler and starts the cranks. Say the event demo contract deployed above is at address `KT19EAMugKU416cbA9jL1XcukWArfpv4dLYA`
 ```typescript
