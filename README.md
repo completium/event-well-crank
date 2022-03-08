@@ -107,7 +107,7 @@ const run = async () => {
   runCrank()
 }
 
-run()
+await run()
 ```
 
 > use
