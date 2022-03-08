@@ -33,8 +33,12 @@ Starts the crank process. It takes an optional `CrankOptions` object with option
 | `delay` | `number` | `2000` | number of milliseconds between two lookups of the event well contract |
 | `horizon` | `number` | `3` | number of blocks to look back (the higher, the higher the probability to read the main branch) |
 | `endpoint` | `string` | `https://mainnet.api.tez.ie` | endpoint used by the event crank |
-| `well` | `string` | `KT1...` | address of the event well contract |
+| `well` | `string` | (see below) | address of the event well contract |
 | `verbose` | `boolean` | `false` | flag to turn crank's verbose mode on/off |
+
+The well contract is deployed on mainnet and hangzhounet:
+* mainnet (default) : `KT1...`.
+* hangzhounet (test): `KT1UsVVireDXZE5R1waCeyKnYD178g2cVDji`
 
 ### `stopCrank`
 
@@ -104,7 +108,10 @@ const handleTestEvent = (e : TestEvent) => {
 
 const run = async () => {
   register_TestEvent('KT19EAMugKU416cbA9jL1XcukWArfpv4dLYA', handleTestEvent);
-  runCrank({ endpoint: 'https://hangzhounet.api.tez.ie', well: 'KT1UsVVireDXZE5R1waCeyKnYD178g2cVDji' })
+  runCrank({
+    endpoint: 'https://hangzhounet.api.tez.ie',
+    well: 'KT1UsVVireDXZE5R1waCeyKnYD178g2cVDji'
+  })
 }
 
 await run()
