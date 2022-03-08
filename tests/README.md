@@ -1,5 +1,3 @@
-# Test
-
 ## Binding generation
 
 The [`test_bindings_gen.ts`](./test_bindings_gen.ts) has been generated with the command:
