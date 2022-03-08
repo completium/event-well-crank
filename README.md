@@ -44,7 +44,7 @@ Stops the crank.
 
 ## Bindings
 
-[`@completium/completium-cli`](https://www.npmjs.com/package/@completium/completium-cli) generates the bindings for an [Archetype](https://archetype-lang.org) contract. It generates for each event emitted by a contract:
+[`@completium/completium-cli`](https://www.npmjs.com/package/@completium/completium-cli) generates the TS bindings from an [Archetype](https://archetype-lang.org) contract. It generates for each event emitted by a contract:
 * the event type
 * the `make` event function
 * the dedicated register function (calls [`register`](#register) function with generated `make` function), which takes 2 arguments:
@@ -127,4 +127,18 @@ After a few blocks generation, the application prints the following message:
 
 ```
 Test Event received with value "This is a long enough string."!
+```
+
+## Run `test.ts`
+
+Edit [test.ts] and replace the `'YOUR_PRIVATE_KEY'` by your private key. The following command displays the private key of your current account:
+```bash
+$ completium-cli show account --with-private-key
+```
+
+The execute the test with the following commands:
+```bash
+$ npm i
+$ npm run build
+$ npm run test
 ```
