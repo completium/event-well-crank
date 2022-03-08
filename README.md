@@ -102,8 +102,6 @@ const handleTestEvent = (e : TestEvent) => {
   console.log(`Test Event received with value "${e.val}"!`);
 }
 
-register_TestEvent('KT19EAMugKU416cbA9jL1XcukWArfpv4dLYA', handleTestEvent);
-
 const run = async () => {
   register_TestEvent('KT19EAMugKU416cbA9jL1XcukWArfpv4dLYA', handleTestEvent);
   runCrank()
