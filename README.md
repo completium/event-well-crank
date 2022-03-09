@@ -35,6 +35,7 @@ Starts the crank process. It takes an optional `CrankOptions` object with option
 | `verbose` | `boolean` | `false` | flag to turn crank's verbose mode on/off |
 
 The well contract is deployed on mainnet and testnets:
+
 | Network | Well address |
 | -- | -- |
 | mainnet | `KT1AHVF5m8XaWPQCGgfAsZ9eSJJZ7WVGV2hE` |
