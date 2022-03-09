@@ -41,9 +41,6 @@ The well contract is deployed on mainnet and testnets:
 | ithacanet | `KT1ReVgfaUqHzWWiNRfPXQxf7TaBLVbxrztw` |
 | hangzhounet | `KT1Aho6K97CKApDSCxXEzvP14qd1qTHhF4uH` |
 
-* mainnet (default): `KT1...`.
-* hangzhounet (test): `KT1UsVVireDXZE5R1waCeyKnYD178g2cVDji`
-
 ### `stopCrank`
 
 Stops the crank.
