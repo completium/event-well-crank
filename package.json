@@ -1,6 +1,6 @@
 {
   "name": "@completium/event-well-crank",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Detects events emitted by smart contracts on the Tezos blockchain, and executes registered event handler functions.",
   "main": "build/src/index.js",
   "types": "build/src/index.d.ts",
