@@ -52,7 +52,7 @@ type ApplyProcessor<T extends WellEvent> = {
 function processInternalOp(internalOp : InternalOperationResult, data : Omit<WellEventData, 'source'>) : Array<ApplyProcessor<any>> {
   let apps : Array<ApplyProcessor<any>> = []
   eventDefinitions.forEach((eventDef : WellEventDefinition<any>) => {
-    if (internalOp.source === eventDef.source && internalOp.destination === well) {
+    if (internalOp.source === eventDef.source && internalOp.destination === well && internalOp.result.status === "applied") {
       if (internalOp.parameters !== undefined) {
         const packedEvent = (internalOp.parameters.value as MichelsonV1ExpressionBase).bytes
         if (packedEvent !== undefined) {
