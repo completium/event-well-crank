@@ -1,13 +1,10 @@
 
 export interface WellEvent {}
 
-export type WellEventCreator<T extends WellEvent> = (b : string) => T | undefined
-
 export type WellEventProcessor<T extends WellEvent> = (t : T, d ?: WellEventData) => void
 
 export interface WellEventDefinition<T extends WellEvent> {
   source  : string
-  create  : WellEventCreator<T>
   process : WellEventProcessor<T>
 }
 /**
@@ -27,4 +24,10 @@ export type WellEventData = {
   op     : string
   time   : string
   source : string
+  evtype : string
+}
+
+export type UnpackedEvent = {
+  _type  : string;
+  _event : any
 }
