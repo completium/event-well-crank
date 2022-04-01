@@ -1,7 +1,8 @@
+import { MichelsonType, Parser } from '@taquito/michel-codec';
 import { BlockResponse, InternalOperationResult, MichelsonV1ExpressionBase, OperationContentsAndResultTransaction, OpKind, RpcClient } from '@taquito/rpc';
 
-import { WellEventData, CrankOptions, WellEvent, WellEventCreator, WellEventDefinition, WellEventProcessor } from './types';
-import { defaultIndexerOptions, sleep } from './utils';
+import { CrankOptions, UnpackedEvent, WellEvent, WellEventData, WellEventDefinition, WellEventProcessor } from './types';
+import { defaultIndexerOptions, hex_to_data, sleep } from './utils';
 
 let delay   = defaultIndexerOptions.delay
 let horizon = defaultIndexerOptions.horizon
@@ -19,6 +20,42 @@ const dump = (s : string) => {
   }
 }
 
+const genericEventMichelsonType: MichelsonType =
+{  "prim": "pair",
+   "args": [
+     {  "prim": "string",
+        "annots": [
+          "%_kind"
+        ]
+     },
+     {  "prim": "pair",
+        "args": [
+          {  "prim": "string",
+             "annots": [
+               "%_type"
+             ]
+          },
+          {  "prim": "bytes",
+             "annots": [
+               "%_event"
+             ]
+          }
+        ]
+     }
+   ]
+};
+
+const createEvent = (packedEvent : string) : UnpackedEvent => {
+  const data = hex_to_data(genericEventMichelsonType, packedEvent);
+  const eventTypeStr = data._type;
+  const michelsonExpr = (new Parser()).parseMichelineExpression(eventTypeStr.toString());
+  const michelsonType : MichelsonType = JSON.parse(JSON.stringify(michelsonExpr));
+  return {
+    _type : data._type,
+    _event : hex_to_data(michelsonType, data._event)
+  }
+}
+
 /**
  *
  * @param s source, address of the event emitter contract
@@ -28,12 +65,12 @@ const dump = (s : string) => {
  *
  */
 export function registerEvent<T extends WellEvent>(
-{ s, c, p }: { s: string; c: WellEventCreator<T>; p: WellEventProcessor<T>; }) : void {
-  const key = s + c.toString() + p.toString()
+{ s, p }: { s: string; p: WellEventProcessor<T>; }) : void {
+  const key = s + p.toString()
   if (eventDefinitionSet.has(key)) {
     return
   }
-  eventDefinitions.push({ source : s, create : c, process : p })
+  eventDefinitions.push({ source : s, process : p })
   eventDefinitionSet.add(key)
 }
 
@@ -49,16 +86,16 @@ type ApplyProcessor<T extends WellEvent> = {
  * @description Executes event processors on internal operation
  *
  */
-function processInternalOp(internalOp : InternalOperationResult, data : Omit<WellEventData, 'source'>) : Array<ApplyProcessor<any>> {
+function processInternalOp(internalOp : InternalOperationResult, data : Omit<WellEventData, 'source' | 'evtype'>) : Array<ApplyProcessor<any>> {
   let apps : Array<ApplyProcessor<any>> = []
   eventDefinitions.forEach((eventDef : WellEventDefinition<any>) => {
     if (internalOp.source === eventDef.source && internalOp.destination === well && internalOp.result.status === "applied") {
       if (internalOp.parameters !== undefined) {
         const packedEvent = (internalOp.parameters.value as MichelsonV1ExpressionBase).bytes
         if (packedEvent !== undefined) {
-          const event = eventDef.create(packedEvent);
+          const event = createEvent(packedEvent);
           if (event !== undefined) {
-            apps.push({ process : eventDef.process, event : event, data  : { ...data, source : eventDef.source } })
+            apps.push({ process : eventDef.process, event : event._event, data  : { ...data, source : eventDef.source, evtype : event._type } })
           }
         }
       }
@@ -77,7 +114,7 @@ export function processBlock(block : BlockResponse) : Array<ApplyProcessor<any>>
   let apps : Array<ApplyProcessor<any>> = []
   block.operations.forEach(opentry => {
     opentry.forEach(op => {
-      let data : Omit<WellEventData, 'source'> = { block : block.hash, op : op.hash, time : block.header.timestamp.toString() }
+      let data : Omit<WellEventData, 'source' | 'evtype'> = { block : block.hash, op : op.hash, time : block.header.timestamp.toString() }
       op.contents.forEach(opcontent => {
         if (opcontent.kind === OpKind.TRANSACTION) {
           const internalops = (opcontent as OperationContentsAndResultTransaction).metadata.internal_operation_results
