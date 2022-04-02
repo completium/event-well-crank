@@ -1,7 +1,7 @@
 import { MichelsonType, Parser } from '@taquito/michel-codec';
 import { BlockResponse, InternalOperationResult, MichelsonV1ExpressionBase, OperationContentsAndResultTransaction, OpKind, RpcClient } from '@taquito/rpc';
 
-import { CrankOptions, UnpackedEvent, WellEvent, WellEventData, WellEventDefinition, WellEventProcessor } from './types';
+import { CrankOptions, UnpackedEvent, WellEvent, WellEventData, WellEventDefinition, WellEventFilter, WellEventProcessor } from './types';
 import { defaultIndexerOptions, hex_to_data, sleep } from './utils';
 
 let delay   = defaultIndexerOptions.delay
@@ -45,8 +45,9 @@ const genericEventMichelsonType: MichelsonType =
    ]
 };
 
-const createEvent = (packedEvent : string) : UnpackedEvent => {
+const createEvent = (packedEvent : string, filter : WellEventFilter) : UnpackedEvent | undefined => {
   const data = hex_to_data(genericEventMichelsonType, packedEvent);
+  if (! filter(data._type)) return undefined;
   const eventTypeStr = data._type;
   const michelsonExpr = (new Parser()).parseMichelineExpression(eventTypeStr.toString());
   const michelsonType : MichelsonType = JSON.parse(JSON.stringify(michelsonExpr));
@@ -65,12 +66,12 @@ const createEvent = (packedEvent : string) : UnpackedEvent => {
  *
  */
 export function registerEvent<T extends WellEvent>(
-{ s, p }: { s: string; p: WellEventProcessor<T>; }) : void {
-  const key = s + p.toString()
+{ source, filter, process }: { source: string; filter : WellEventFilter, process: WellEventProcessor<T>; }) : void {
+  const key = source + process.toString()
   if (eventDefinitionSet.has(key)) {
     return
   }
-  eventDefinitions.push({ source : s, process : p })
+  eventDefinitions.push({ source : source, filter : filter, process : process })
   eventDefinitionSet.add(key)
 }
 
@@ -93,7 +94,7 @@ function processInternalOp(internalOp : InternalOperationResult, data : Omit<Wel
       if (internalOp.parameters !== undefined) {
         const packedEvent = (internalOp.parameters.value as MichelsonV1ExpressionBase).bytes
         if (packedEvent !== undefined) {
-          const event = createEvent(packedEvent);
+          const event = createEvent(packedEvent, eventDef.filter);
           if (event !== undefined) {
             apps.push({ process : eventDef.process, event : event._event, data  : { ...data, source : eventDef.source, evtype : event._type } })
           }

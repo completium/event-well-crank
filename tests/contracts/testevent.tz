@@ -8,7 +8,7 @@
          UNPAIR;
          SWAP;
          DUP 4;
-         PUSH address "KT1Aho6K97CKApDSCxXEzvP14qd1qTHhF4uH";
+         PUSH address "KT1ReVgfaUqHzWWiNRfPXQxf7TaBLVbxrztw";
          CONTRACT %event bytes;
          IF_NONE
            { PUSH string "BAD_EVENT_CONTRACT";

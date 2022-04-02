@@ -1,10 +1,13 @@
 
 export interface WellEvent {}
 
+export type WellEventFilter = (t : string) => boolean
+
 export type WellEventProcessor<T extends WellEvent> = (t : T, d ?: WellEventData) => void
 
 export interface WellEventDefinition<T extends WellEvent> {
   source  : string
+  filter : WellEventFilter
   process : WellEventProcessor<T>
 }
 /**

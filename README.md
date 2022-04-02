@@ -82,9 +82,9 @@ entry emit_event(v : string) {
 }
 ```
 
-Deploy the contract on the test net with the following command:
+Deploy the contract on the testnet with the following command:
 ```bash
-$ completium-cli set endpoint https://hangzhounet.api.tez.ie
+$ completium-cli set endpoint https://ithacanet.ecadinfra.com
 $ completium-cli deploy event_demo.arl
 ```
 
@@ -111,8 +111,8 @@ const handleTestEvent = (e : TestEvent) => {
 const run = async () => {
   register_TestEvent('KT19EAMugKU416cbA9jL1XcukWArfpv4dLYA', handleTestEvent);
   runCrank({
-    endpoint: 'https://hangzhounet.api.tez.ie',
-    well: 'KT1UsVVireDXZE5R1waCeyKnYD178g2cVDji'
+    endpoint: 'https://ithacanet.ecadinfra.com',
+    well: 'KT1ReVgfaUqHzWWiNRfPXQxf7TaBLVbxrztw'
   })
 }
 

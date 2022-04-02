@@ -10,6 +10,10 @@ export interface TestEvent extends WellEvent {
   sval : string
 }
 
+const is_TestEvent = (t : string) => {
+  return t === 'TestEvent'
+}
+
 const handle_TestEvent = (handler : WellEventProcessor<TestEvent>) => (event : any, data ?: WellEventData) => {
   handler({
    ival : event.ival,
@@ -17,5 +21,5 @@ const handle_TestEvent = (handler : WellEventProcessor<TestEvent>) => (event : a
 }
 
 export function register_TestEvent(source : string, handler : WellEventProcessor<TestEvent>) {
-  registerEvent({ s: source, p: handle_TestEvent(handler) })
+  registerEvent({ source: source, filter : is_TestEvent, process: handle_TestEvent(handler) })
 }

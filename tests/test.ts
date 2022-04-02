@@ -6,18 +6,18 @@ import fs from 'fs';
 import { runCrank } from '../src';
 import { register_TestEvent, TestEvent } from './test_bindings_gen';
 
-const Tezos = new TezosToolkit('https://hangzhounet.api.tez.ie');
+const Tezos = new TezosToolkit('https://ithacanet.ecadinfra.com');
 
 Tezos.setProvider({
   signer: new InMemorySigner('edskS2v9ADu7fomdqaHTJoSPHHPTh5Dpjcq8UapLVsPW3nq4ERewQcV4gPN4yTvo2RqhjfDoY2XjHZeerQ1QNyixLR5h1ygUUt'),
 });
 
-let client  = new RpcClient('https://hangzhounet.api.tez.ie');
+let client  = new RpcClient('https://ithacanet.ecadinfra.com');
 
 const event_test_michelson = fs.readFileSync('./tests/contracts/testevent.tz').toString();
 
 const anint = 12345
-const astring = 'This is a string'
+const astring = 'This is a string (from Ithaca)'
 
 function handleTestEvent(e : TestEvent) {
   console.log(`Test Event detected with values '${e.ival}' and '${e.sval}'!`);
@@ -46,8 +46,8 @@ const runTest = async () => {
   await op.confirmation();
   runCrank({
     bottom   : bottom,
-    endpoint : 'https://hangzhounet.api.tez.ie',
-    well     : 'KT1Aho6K97CKApDSCxXEzvP14qd1qTHhF4uH',
+    endpoint : 'https://ithacanet.ecadinfra.com',
+    well     : 'KT1ReVgfaUqHzWWiNRfPXQxf7TaBLVbxrztw',
     verbose  : true
   });
 }
