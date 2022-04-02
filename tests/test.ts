@@ -9,7 +9,7 @@ import { register_TestEvent, TestEvent } from './test_bindings_gen';
 const Tezos = new TezosToolkit('https://ithacanet.ecadinfra.com');
 
 Tezos.setProvider({
-  signer: new InMemorySigner('edskRdMmxx5JwyNPDFsbdwnA5UNvQzoaNmiBwXXrdmBaGjpb1jfdRZZJJKVF77UotvyKNsvB3khwhK2wLHB5woXPT8RvfCMi3P'),
+  signer: new InMemorySigner('YOUR_PRIVATE_KEY'),
 });
 
 let client  = new RpcClient('https://ithacanet.ecadinfra.com');
