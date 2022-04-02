@@ -34,10 +34,10 @@
     "deploy": "mocha --timeout 0 --slow 99999999999999999999 ./tests/deploy.js"
   },
   "dependencies": {
-    "@taquito/michel-codec": "^11.2.0",
-    "@taquito/rpc": "^11.2.0",
-    "@taquito/taquito": "^11.2.0",
-    "@taquito/utils": "^11.2.0",
+    "@taquito/michel-codec": "^12.0.0",
+    "@taquito/rpc": "^12.0.0",
+    "@taquito/taquito": "^12.0.0",
+    "@taquito/utils": "^12.0.0",
     "typescript": "^4.6.2"
   },
   "devDependencies": {

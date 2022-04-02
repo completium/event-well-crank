@@ -11,7 +11,7 @@ export interface TestEvent extends WellEvent {
 }
 
 const is_TestEvent = (t : string) => {
-  return t === 'TestEvent'
+  return t == 'TestEvent'
 }
 
 const handle_TestEvent = (handler : WellEventProcessor<TestEvent>) => (event : any, data ?: WellEventData) => {

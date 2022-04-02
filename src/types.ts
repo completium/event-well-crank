@@ -31,6 +31,6 @@ export type WellEventData = {
 }
 
 export type UnpackedEvent = {
-  _type  : string;
+  _kind  : string;
   _event : any
 }

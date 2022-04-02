@@ -47,12 +47,12 @@ const genericEventMichelsonType: MichelsonType =
 
 const createEvent = (packedEvent : string, filter : WellEventFilter) : UnpackedEvent | undefined => {
   const data = hex_to_data(genericEventMichelsonType, packedEvent);
-  if (! filter(data._type)) return undefined;
+  if (! filter(data._kind)) return undefined;
   const eventTypeStr = data._type;
   const michelsonExpr = (new Parser()).parseMichelineExpression(eventTypeStr.toString());
   const michelsonType : MichelsonType = JSON.parse(JSON.stringify(michelsonExpr));
   return {
-    _type : data._type,
+    _kind : data._kind,
     _event : hex_to_data(michelsonType, data._event)
   }
 }
@@ -96,7 +96,7 @@ function processInternalOp(internalOp : InternalOperationResult, data : Omit<Wel
         if (packedEvent !== undefined) {
           const event = createEvent(packedEvent, eventDef.filter);
           if (event !== undefined) {
-            apps.push({ process : eventDef.process, event : event._event, data  : { ...data, source : eventDef.source, evtype : event._type } })
+            apps.push({ process : eventDef.process, event : event._event, data  : { ...data, source : eventDef.source, evtype : event._kind } })
           }
         }
       }
