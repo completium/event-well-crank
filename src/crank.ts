@@ -67,7 +67,7 @@ const createEvent = (packedEvent : string, filter : WellEventFilter) : UnpackedE
  */
 export function registerEvent<T extends WellEvent>(
 { source, filter, process }: { source: string; filter : WellEventFilter, process: WellEventProcessor<T>; }) : void {
-  const key = source + process.toString()
+  const key = source + filter.toString() + process.toString()
   if (eventDefinitionSet.has(key)) {
     return
   }
