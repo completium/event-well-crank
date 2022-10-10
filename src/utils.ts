@@ -2,6 +2,7 @@ import { MichelsonData, MichelsonType } from "@taquito/michel-codec";
 import { Parser } from "@taquito/michel-codec";
 import { unpackData } from "@taquito/michel-codec";
 import { Schema } from "@taquito/michelson-encoder";
+import { MichelsonV1Expression } from "@taquito/rpc";
 
 import { CrankOptions } from "./types"
 
@@ -30,8 +31,7 @@ function parseHex(s: string): number[] {
   return res;
 }
 
-export function hex_to_data(ty : MichelsonType, s : string) : any {
-  const expr : MichelsonData = unpackData(parseHex(s), ty);
+export function to_taquito_object(ty : MichelsonType, expr : MichelsonV1Expression) : any {
   const schema = new Schema(ty);
   return schema.Execute(expr);
 }

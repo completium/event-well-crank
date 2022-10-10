@@ -1,3 +1,3 @@
 export * from "./types";
-export { hex_to_data } from './utils';
+export { to_taquito_object } from './utils';
 export * from "./crank";
