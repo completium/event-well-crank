@@ -9,7 +9,6 @@ export const defaultIndexerOptions : Required<CrankOptions> = {
     delay    : 2000,
     horizon  : 3,
     endpoint : 'https://mainnet.api.tez.ie',
-    well     : 'KT1AHVF5m8XaWPQCGgfAsZ9eSJJZ7WVGV2hE',
     bottom   : "head~4",
     verbose  : false
 }

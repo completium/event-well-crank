@@ -6,7 +6,6 @@ import { defaultIndexerOptions, hex_to_data, sleep } from './utils';
 
 let delay   = defaultIndexerOptions.delay
 let horizon = defaultIndexerOptions.horizon
-let well    = defaultIndexerOptions.well
 let bottom  = defaultIndexerOptions.bottom
 let client  = new RpcClient(defaultIndexerOptions.endpoint);
 let verbose = defaultIndexerOptions.verbose
@@ -90,7 +89,7 @@ type ApplyProcessor<T extends WellEvent> = {
 function processInternalOp(internalOp : InternalOperationResult, data : Omit<WellEventData, 'source' | 'evtype'>) : Array<ApplyProcessor<any>> {
   let apps : Array<ApplyProcessor<any>> = []
   eventDefinitions.forEach((eventDef : WellEventDefinition<any>) => {
-    if (internalOp.source === eventDef.source && internalOp.destination === well && internalOp.result.status === "applied") {
+    if (/*internalOp.source === eventDef.source &&*/ internalOp.kind === OpKind.EVENT && internalOp.result.status === "applied") {
       if (internalOp.parameters !== undefined) {
         const packedEvent = (internalOp.parameters.value as MichelsonV1ExpressionBase).bytes
         if (packedEvent !== undefined) {
@@ -178,7 +177,6 @@ export async function runCrank(options ?: CrankOptions) {
   if (options !== undefined) {
     delay   = options.delay   ?? delay
     horizon = options.horizon ?? horizon
-    well   = options.well   ?? well
     bottom  = options.bottom  ?? bottom
     verbose = options.verbose ?? verbose
     if (options.endpoint !== undefined) {

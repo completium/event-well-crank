@@ -1,6 +1,6 @@
 {
-  "name": "@completium/event-well-crank",
-  "version": "0.0.7",
+  "name": "@completium/event-listener",
+  "version": "0.0.1",
   "description": "Detects events emitted by smart contracts on the Tezos blockchain, and executes registered event handler functions.",
   "main": "build/src/index.js",
   "types": "build/src/index.d.ts",
@@ -29,20 +29,22 @@
   "homepage": "https://github.com/completium/event-well-crank",
   "scripts": {
     "build": "npx tsc --outDir build",
-    "test": "node ./build/tests/test.js",
+    "test": "ts-mocha --timeout 0 --slow 99999999999999999999 ./tests/test.spec.ts",
     "bind": "archetype --target bindings-ts ./tests/contracts/testevent.arl > ./tests/test_bindings_gen.ts",
     "deploy": "mocha --timeout 0 --slow 99999999999999999999 ./tests/deploy.js"
   },
   "dependencies": {
-    "@taquito/michel-codec": "^12.0.0",
-    "@taquito/rpc": "^12.0.0",
-    "@taquito/taquito": "^12.0.0",
-    "@taquito/utils": "^12.0.0",
+    "@taquito/michel-codec": "^14.0.0",
+    "@taquito/rpc": "^14.0.0",
+    "@taquito/taquito": "^14.0.0",
+    "@taquito/utils": "^14.0.0",
     "typescript": "^4.6.2"
   },
   "devDependencies": {
-    "@completium/completium-cli": "^0.3.34",
+    "@completium/completium-cli": "^0.4.33",
+    "@types/expect": "^24.3.0",
+    "@types/mocha": "^10.0.0",
     "bignumber.js": "^9.0.2",
-    "mocha": "^9.2.1"
+    "ts-mocha": "^10.0.0"
   }
 }

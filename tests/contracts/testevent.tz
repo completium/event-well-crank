@@ -7,25 +7,16 @@
          UNPAIR;
          UNPAIR;
          SWAP;
-         DUP 4;
-         PUSH address "KT1ReVgfaUqHzWWiNRfPXQxf7TaBLVbxrztw";
-         CONTRACT %event bytes;
-         IF_NONE
-           { PUSH string "BAD_EVENT_CONTRACT";
-             FAILWITH }
-           {  };
-         PUSH mutez 0;
-         DUP 4;
+         NIL operation;
+         NIL operation;
          DUP 6;
+         ITER { CONS };
+         DUP 3;
+         DUP 5;
          PAIR;
-         PACK;
-         PUSH string "(pair (nat %ival) (string %sval))";
-         PAIR;
-         PUSH string "TestEvent";
-         PAIR;
-         PACK;
-         TRANSFER_TOKENS;
+         EMIT %TestEvent (pair (nat %ival) (string %sval));
          CONS;
+         ITER { CONS };
          DIP { DIG 3; DROP };
          DUG 3;
          DROP 2;

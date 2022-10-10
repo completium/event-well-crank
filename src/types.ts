@@ -17,7 +17,6 @@ export type CrankOptions = {
   delay    ?: number
   horizon  ?: number
   endpoint ?: string
-  well     ?: string
   bottom   ?: string
   verbose  ?: boolean
 }
