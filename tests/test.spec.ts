@@ -3,7 +3,7 @@ import { InMemorySigner } from '@taquito/signer';
 import { TezosToolkit } from '@taquito/taquito';
 import fs from 'fs';
 
-import { runEventListener } from '../src';
+import { run_listener } from '../src';
 import { register_TestEvent, TestEvent } from './test_bindings_gen';
 
 const endpoint = 'https://kathmandunet.ecadinfra.com';
@@ -46,7 +46,7 @@ describe('Run test', async () => {
   const op = await contract.methods.default(anint, astring).send();
   console.log("Calling contract...");
   await op.confirmation();
-  runEventListener({
+  run_listener({
     bottom: bottom,
     endpoint: endpoint,
     verbose: true

@@ -135,14 +135,12 @@ let running_bottom: string | undefined = undefined
  * @description Starts the event indexer
  *
  */
-export async function runEventListener(options?: EventListenerOptions) {
+export async function run_listener(options?: EventListenerOptions) {
   if (_running) {
     return
   }
-  dump("Starting tezos event listener ...")
   _running = true
   _stop = false
-  bottom = running_bottom ?? bottom
   if (options !== undefined) {
     delay = options.delay ?? delay
     horizon = options.horizon ?? horizon
@@ -152,6 +150,8 @@ export async function runEventListener(options?: EventListenerOptions) {
       client = new RpcClient(options.endpoint)
     }
   }
+  bottom = running_bottom ?? bottom
+  dump("Starting tezos event listener ...")
   let bottomBlock: BlockResponse = await client.getBlock({ block: bottom })
   do {
     let newBottom = await crawl(bottomBlock)
@@ -163,6 +163,6 @@ export async function runEventListener(options?: EventListenerOptions) {
   dump("Tezos event listener stopped.")
 }
 
-export function stopEventListener() {
+export function stop_listener() {
   _stop = true
 }
