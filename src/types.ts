@@ -1,19 +1,19 @@
 
-export interface WellEvent {}
+export interface Event {}
 
-export type WellEventFilter = (t : string) => boolean
+export type EventFilter = (t : string) => boolean
 
-export type WellEventProcessor<T extends WellEvent> = (t : T, d ?: WellEventData) => void
+export type EventProcessor<T extends Event> = (t : T, d ?: EventData) => void
 
-export interface WellEventDefinition<T extends WellEvent> {
+export interface EventDefinition<T extends Event> {
   source  : string
-  filter : WellEventFilter
-  process : WellEventProcessor<T>
+  filter : EventFilter
+  process : EventProcessor<T>
 }
 /**
  * @description indexer options to pass to the 'run' function
  */
-export type CrankOptions = {
+export type EventListenerOptions = {
   delay    ?: number
   horizon  ?: number
   endpoint ?: string
@@ -21,7 +21,7 @@ export type CrankOptions = {
   verbose  ?: boolean
 }
 
-export type WellEventData = {
+export type EventData = {
   block  : string
   op     : string
   time   : string

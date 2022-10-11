@@ -1,9 +1,7 @@
-import { MichelsonData } from '@taquito/michel-codec';
-import { MichelsonType, Parser } from '@taquito/michel-codec';
-import { BlockResponse, InternalOperationResult, MichelsonV1Expression, MichelsonV1ExpressionBase, OperationContentsAndResultTransaction, OpKind, RpcClient } from '@taquito/rpc';
+import { BlockResponse, InternalOperationResult, OperationContentsAndResultTransaction, OpKind, RpcClient } from '@taquito/rpc';
 
-import { CrankOptions, UnpackedEvent, WellEvent, WellEventData, WellEventDefinition, WellEventFilter, WellEventProcessor } from './types';
-import { defaultIndexerOptions, to_taquito_object, sleep } from './utils';
+import { EventListenerOptions, UnpackedEvent, Event, EventData, EventDefinition, EventFilter, EventProcessor } from './types';
+import { defaultIndexerOptions, sleep, to_taquito_object } from './utils';
 
 let delay = defaultIndexerOptions.delay
 let horizon = defaultIndexerOptions.horizon
@@ -11,7 +9,7 @@ let bottom = defaultIndexerOptions.bottom
 let client = new RpcClient(defaultIndexerOptions.endpoint);
 let verbose = defaultIndexerOptions.verbose
 
-const eventDefinitions: Array<WellEventDefinition<any>> = []
+const eventDefinitions: Array<EventDefinition<any>> = []
 const eventDefinitionSet: Set<string> = new Set()
 
 const dump = (s: string) => {
@@ -20,7 +18,7 @@ const dump = (s: string) => {
   }
 }
 
-const createEvent = (eventDef: WellEventDefinition<any>, internalOp: InternalOperationResult): UnpackedEvent | undefined => {
+const createEvent = (eventDef: EventDefinition<any>, internalOp: InternalOperationResult): UnpackedEvent | undefined => {
   if (internalOp.type !== undefined && internalOp.payload !== undefined && internalOp.tag !== undefined) {
     if (eventDef.filter(internalOp.tag)) {
       const data = to_taquito_object(internalOp.type, internalOp.payload);
@@ -35,13 +33,13 @@ const createEvent = (eventDef: WellEventDefinition<any>, internalOp: InternalOpe
 /**
  *
  * @param s source, address of the event emitter contract
- * @param c creator, well event creator function (provided by binding generator)
- * @param p processor, your well event processor
+ * @param c creator, event creator function (provided by binding generator)
+ * @param p processor, your event processor
  * @description Registers an event definition in indexer
  *
  */
-export function registerEvent<T extends WellEvent>(
-  { source, filter, process }: { source: string; filter: WellEventFilter, process: WellEventProcessor<T>; }): void {
+export function registerEvent<T extends Event>(
+  { source, filter, process }: { source: string; filter: EventFilter, process: EventProcessor<T>; }): void {
   const key = source + filter.toString() + process.toString()
   if (eventDefinitionSet.has(key)) {
     return
@@ -50,10 +48,10 @@ export function registerEvent<T extends WellEvent>(
   eventDefinitionSet.add(key)
 }
 
-type ApplyProcessor<T extends WellEvent> = {
-  process: WellEventProcessor<T>
+type ApplyProcessor<T extends Event> = {
+  process: EventProcessor<T>
   event: T
-  data: WellEventData
+  data: EventData
 }
 
 /**
@@ -62,9 +60,9 @@ type ApplyProcessor<T extends WellEvent> = {
  * @description Executes event processors on internal operation
  *
  */
-function processInternalOp(internalOp: InternalOperationResult, data: Omit<WellEventData, 'source' | 'evtype'>): Array<ApplyProcessor<any>> {
+function processInternalOp(internalOp: InternalOperationResult, data: Omit<EventData, 'source' | 'evtype'>): Array<ApplyProcessor<any>> {
   let apps: Array<ApplyProcessor<any>> = []
-  eventDefinitions.forEach((eventDef: WellEventDefinition<any>) => {
+  eventDefinitions.forEach((eventDef: EventDefinition<any>) => {
     if (internalOp.source === eventDef.source && internalOp.kind === OpKind.EVENT && internalOp.result.status === "applied") {
       const event = createEvent(eventDef, internalOp);
       if (event !== undefined) {
@@ -85,7 +83,7 @@ export function processBlock(block: BlockResponse): Array<ApplyProcessor<any>> {
   let apps: Array<ApplyProcessor<any>> = []
   block.operations.forEach(opentry => {
     opentry.forEach(op => {
-      let data: Omit<WellEventData, 'source' | 'evtype'> = { block: block.hash, op: op.hash, time: block.header.timestamp.toString() }
+      let data: Omit<EventData, 'source' | 'evtype'> = { block: block.hash, op: op.hash, time: block.header.timestamp.toString() }
       op.contents.forEach(opcontent => {
         if (opcontent.kind === OpKind.TRANSACTION) {
           const internalops = (opcontent as OperationContentsAndResultTransaction).metadata.internal_operation_results
@@ -137,7 +135,7 @@ let running_bottom: string | undefined = undefined
  * @description Starts the event indexer
  *
  */
-export async function runCrank(options?: CrankOptions) {
+export async function runEventListener(options?: EventListenerOptions) {
   if (_running) {
     return
   }
@@ -165,6 +163,6 @@ export async function runCrank(options?: CrankOptions) {
   dump("Tezos event listener stopped.")
 }
 
-export function stopCrank() {
+export function stopEventListener() {
   _stop = true
 }
