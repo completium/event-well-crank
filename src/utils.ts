@@ -31,7 +31,7 @@ function parseHex(s: string): number[] {
   return res;
 }
 
-export function to_taquito_object(ty : MichelsonType, expr : MichelsonV1Expression) : any {
+export function to_taquito_object(ty : MichelsonV1Expression, expr : MichelsonV1Expression) : any {
   const schema = new Schema(ty);
   return schema.Execute(expr);
 }
